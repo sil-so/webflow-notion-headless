@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "webflow-notion-headless",
+  "main": "worker.js",
+  "compatibility_date": "2025-07-05",
+
+  "assets": {
+    "directory": "public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": true
+  },
+
+  "observability": {
+    "logs": {
+      "enabled": true
+    }
+  },
+
+  // Production Environment
+  // This block runs when you use: `npx wrangler deploy --env production`
+  "env": {
+    "production": {
+      "name": "webflow-notion-headless",
+
+      // IMPORTANT: Cloudflare requires you to verify ownership of these domains.
+      // 1. Add your domain to Cloudflare Dashboard.
+      // 2. Change the placeholders below to your actual domain.
+      "routes": ["yourdomain.com/*", "www.yourdomain.com/*"],
+
+      // Production KV Namespace
+      "kv_namespaces": [
+        {
+          "binding": "BLOG_CACHE",
+          "id": "YOUR_KV_ID_HERE"
+        }
+      ]
+    }
+  }
+}
