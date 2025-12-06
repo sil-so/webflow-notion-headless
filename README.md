@@ -1,4 +1,4 @@
-# Webflow + Notion + Cloudflare Workers Template
+# Webflow Notion Headless
 
 A hybrid headless setup that allows you to design in Webflow, write in Notion, and serve everything via Cloudflare Workers using server-side rendering (HTMLRewriter).
 
