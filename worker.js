@@ -417,6 +417,37 @@ function convertBlocksToHtml(blocks) {
         html += `<li>${parseRichText(block.numbered_list_item.rich_text)}${block.children ? convertBlocksToHtml(block.children) : ""}</li>`;
         break;
 
+      case "toggle":
+        const summary = parseRichText(block.toggle.rich_text);
+        const childrenHtml = block.children
+          ? convertBlocksToHtml(block.children)
+          : "";
+
+        const uniqueId = "toggle-" + Math.random().toString(36).substr(2, 9);
+        const contentId = `${uniqueId}-content`;
+        const headerId = `${uniqueId}-header`;
+
+        html += `
+          <div class="accordion">
+            <details class="accordion-trigger">
+              <summary class="accordion-summary" aria-controls="${contentId}" id="${headerId}">
+                <span class="accordion-term" role="term">${summary}</span>
+              </summary>
+            </details>
+
+            <div class="accordion-content"
+                  id="${contentId}"
+                  role="region"
+                  aria-labelledby="${headerId}">
+              <div class="accordion-container">
+                <div class="accordion-inner">
+                  ${childrenHtml}
+                </div>
+              </div>
+            </div>
+          </div>`;
+        break;
+
       case "quote":
         html += `<blockquote>${parseRichText(block.quote.rich_text)}</blockquote>`;
         break;
@@ -570,64 +601,12 @@ class PrismHeadHandler {
     this.theme = theme;
   }
   element(e) {
-    // 1. Prism Theme CSS
     const cssUrl =
       this.theme === "prism"
         ? `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css`
         : `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-${this.theme}.min.css`;
 
     e.append(`<link href="${cssUrl}" rel="stylesheet" />`, { html: true });
-
-    // 2. Custom CSS: Copy Button + Webflow .tag override
-    const customCss = `
-      <style>
-        .copy-btn {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          background: rgba(255, 255, 255, 0.2);
-          border: none;
-          border-radius: 4px;
-          color: #fff;
-          font-size: 0.75rem;
-          font-family: sans-serif;
-          padding: 0.25rem 0.5rem;
-          cursor: pointer;
-          opacity: 0;
-          transition: opacity 0.2s ease, background 0.2s ease;
-          z-index: 10;
-        }
-        /* Show on hover for desktop */
-        .code-wrapper:hover .copy-btn {
-          opacity: 1;
-        }
-        /* Always show on Touch Devices */
-        @media (max-width: 768px) {
-          .copy-btn {
-            opacity: 1 !important;
-            background: rgba(255, 255, 255, 0.3);
-          }
-        }
-        .copy-btn:hover {
-          background: rgba(255, 255, 255, 0.4);
-        }
-        .copy-btn.copied {
-          background: #4caf50;
-          color: white;
-        }
-
-        /* Fix Webflow .tag class conflict with Prism .tag */
-        .w-code-block .token.tag {
-          border: none !important;
-          background: transparent !important;
-          padding: 0 !important;
-          border-radius: 0 !important;
-          margin: 0 !important;
-          box-shadow: none !important;
-        }
-      </style>
-    `;
-    e.append(customCss, { html: true });
   }
 }
 
