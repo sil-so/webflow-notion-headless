@@ -3,10 +3,10 @@
  * Edit these values to match your Webflow site and personal details.
  */
 const SITE_CONFIG = {
-  name: "Your Name",
+  name: "Your Site Name",
   domain: "https://yourdomain.com",
   author: {
-    name: "Your Name",
+    name: "Your Full Name",
     url: "https://yourdomain.com/about"
   },
   socials: [
@@ -150,7 +150,7 @@ async function handleBlogPost(slug, request, env) {
 
     const datePublished = new Date(post.date);
     const dateUpdated = post.updated ? new Date(post.updated) : datePublished;
-    const metaTitle = `${post.title} | ${SITE_CONFIG.name}`;
+    const metaTitle = `${post.title} | Blog | ${SITE_CONFIG.name}`;
 
     return (
       new HTMLRewriter()
@@ -411,10 +411,14 @@ function convertBlocksToHtml(blocks) {
         break;
 
       case "bulleted_list_item":
-        html += `<li>${parseRichText(block.bulleted_list_item.rich_text)}${block.children ? convertBlocksToHtml(block.children) : ""}</li>`;
+        html += `<li>${parseRichText(block.bulleted_list_item.rich_text)}${
+          block.children ? convertBlocksToHtml(block.children) : ""
+        }</li>`;
         break;
       case "numbered_list_item":
-        html += `<li>${parseRichText(block.numbered_list_item.rich_text)}${block.children ? convertBlocksToHtml(block.children) : ""}</li>`;
+        html += `<li>${parseRichText(block.numbered_list_item.rich_text)}${
+          block.children ? convertBlocksToHtml(block.children) : ""
+        }</li>`;
         break;
 
       case "toggle":
@@ -449,7 +453,9 @@ function convertBlocksToHtml(blocks) {
         break;
 
       case "quote":
-        html += `<blockquote>${parseRichText(block.quote.rich_text)}</blockquote>`;
+        html += `<blockquote>${parseRichText(
+          block.quote.rich_text
+        )}</blockquote>`;
         break;
       case "divider":
         html += `<div class="w-rich-separator"></div>`;
@@ -461,7 +467,9 @@ function convertBlocksToHtml(blocks) {
             ? block.image.external.url
             : block.image.file.url;
         const cap = parseRichText(block.image.caption);
-        html += `<figure class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="${src}" alt="${cap}" loading="lazy"></div>${cap ? `<figcaption>${cap}</figcaption>` : ""}</figure>`;
+        html += `<figure class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="${src}" alt="${cap}" loading="lazy"></div>${
+          cap ? `<figcaption>${cap}</figcaption>` : ""
+        }</figure>`;
         break;
 
       case "video":

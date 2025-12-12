@@ -7,3 +7,5 @@ Thumbs.db
 
 # Dependencies
 node_modules/
+
+.vscode/
